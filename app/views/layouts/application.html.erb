@@ -3,20 +3,31 @@
 <head>
   <title>Angdevise</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => false %>
   <%= csrf_meta_tags %>
+  <script src="devise.js"></script>
+
 </head>
 <body>
-<div id="user_nav">
-  <% if user_signed_in? %>
-    Signed in as <%= current_user.email %>. Not you?
-    <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
-  <% else %>
-    <%= link_to "Sign up", new_user_registration_path %> or <%= link_to "sign in", new_user_session_path %>
-  <% end %>
-</div>
 
-<%= yield %>
+
+<body ng-app="AuthApp">
+
+	<div ng-controller="myCtrl">
+	{{currentUser}}
+
+	<input ng-model="email" type="text">
+	<input ng-model="password" type="text">
+	<button ng-click="login()">Log meh in</button>
+	<button ng-click="logOut()">Log meh out</button>
+
+	<div ng-repeat ="post in posts">
+		
+		{{post.title}}
+	</div>
+   
+   </div>
+</body>
 
 
 </body>

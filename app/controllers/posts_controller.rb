@@ -9,14 +9,17 @@ class PostsController < ApplicationController
     #binding.pry
     if @user
       @posts = @user.posts
+      render json: @posts, status: :ok
     else
       @posts = Post.all
+      render json: @posts, status: :ok
     end
   end
 
   # GET /posts/1
   # GET /posts/1.json
   def show
+    render json: @post, status: :ok
   end
 
   # GET /posts/new
@@ -27,6 +30,10 @@ class PostsController < ApplicationController
 
   # GET /posts/1/edit
   def edit
+   if user_signed_in?
+   else
+    redirect_to root_path
+   end
   end
 
   # POST /posts
@@ -37,11 +44,9 @@ class PostsController < ApplicationController
 
     respond_to do |format|
       if @post.save
-        format.html { redirect_to @post, notice: 'Post was successfully created.' }
-        format.json { render :show, status: :created, location: @post }
+         render json: @post, status: :created
       else
-        format.html { render :new }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
+        render json: @post.errors, status: :unprocessable_entity
       end
     end
   end
@@ -49,25 +54,24 @@ class PostsController < ApplicationController
   # PATCH/PUT /posts/1
   # PATCH/PUT /posts/1.json
   def update
-    respond_to do |format|
-      if @post.update(post_params)
-        format.html { redirect_to @post, notice: 'Post was successfully updated.' }
-        format.json { render :show, status: :ok, location: @post }
-      else
-        format.html { render :edit }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
-      end
+    if @post.update(post_params)
+      render json: @post, status: :ok
+    else
+      render json: @post.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /posts/1
   # DELETE /posts/1.json
   def destroy
+     if user_signed_in?
+
     @post.destroy
-    respond_to do |format|
-      format.html { redirect_to posts_url, notice: 'Post was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    render json: @post, status: ok
+    
+     else
+    redirect_to root_path
+   end
   end
 
   private
